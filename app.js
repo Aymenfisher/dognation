@@ -15,14 +15,26 @@ app.set("view engine", "ejs");
 require("./config/passport");
 
 // Session Config
-
+app.use(session({
+    resave:false,
+    saveUninitialized:false,
+    secret: 'This is not Secret',
+    cookie:{
+        maxAge: 1000*3600*24,
+        sameSite: false,
+        secure: false
+    }
+}))
 // Passport Config
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // Routes
 app.use(require("./routes/index.routes"));
 
 app.get("/", (req, res) => {
-    const user = null || "Guest";
+    const user = req.user || "Guest";
     res.render("home", { user });
 });
 
